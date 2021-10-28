@@ -6,7 +6,7 @@
 /*   By: cproesch <cproesch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 18:17:39 by cproesch          #+#    #+#             */
-/*   Updated: 2021/10/28 16:29:14 by cproesch         ###   ########.fr       */
+/*   Updated: 2021/10/28 17:27:38 by cproesch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,5 +72,7 @@ char	*find_path(char **envp, char *cmd)
 		return (NULL);
 	path = ft_strdup(find_accessible_path(tab_path_env));
 	ft_del_stringtab(tab_path_env);
+	if (!path)
+		perror("cmd path error");
 	return (path);
 }

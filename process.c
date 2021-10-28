@@ -6,7 +6,7 @@
 /*   By: cproesch <cproesch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/22 15:24:39 by cproesch          #+#    #+#             */
-/*   Updated: 2021/10/28 16:30:22 by cproesch         ###   ########.fr       */
+/*   Updated: 2021/10/28 17:48:40 by cproesch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ char	**parse_cmd(char *argv)
 	while (tab[i])
 		i++;
 	tab[i] = NULL;
+	if (!tab)
+		perror("cmd path error");
 	return (tab);
 }
 
@@ -51,29 +53,34 @@ void	child1_process(t_data *data, char **argv, char **envp)
 {
 	close(data->pipefd[0]);
 	data->input = check_file1(argv[1]);
+	if (data->input == -1)
+		return ;
+	dup2(data->input, STDIN_FILENO);
+	close(data->input);
+	dup2(data->pipefd[1], STDOUT_FILENO);
+	close(data->pipefd[1]);
 	data->cmd1 = parse_cmd(argv[2]);
 	data->cmd1_path = find_path(envp, data->cmd1[0]);
 	if (!data->cmd1 || !(data->cmd1_path))
-		perror("cmd1 path error");
-	dup2(data->input, 0);
-	dup2(data->pipefd[1], 1);
-	close(data->pipefd[1]);
+		return ;
 	if (execve(data->cmd1_path, data->cmd1, envp) == -1)
 		perror("error - Second exceve failed");
-	return ;
 }
 
 void	child2_process(t_data *data, char **argv, char **envp)
 {
 	close(data->pipefd[1]);
 	data->output = check_file2(argv[4]);
+	if (data->output == -1)
+		return ;
+	dup2(data->output, STDOUT_FILENO);
+	close(data->output);
+	dup2(data->pipefd[0], STDIN_FILENO);
+	close(data->pipefd[0]);
 	data->cmd2 = parse_cmd(argv[3]);
 	data->cmd2_path = find_path(envp, data->cmd2[0]);
 	if (!data->cmd2 || !(data->cmd2_path))
-		perror("cmd2 path error");
-	dup2(data->output, 1);
-	dup2(data->pipefd[0], 0);
-	close(data->pipefd[0]);
+		return ;
 	if (execve(data->cmd2_path, data->cmd2, envp) == -1)
 		perror("error - First exceve failed");
 }
