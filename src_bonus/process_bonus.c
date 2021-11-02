@@ -6,7 +6,7 @@
 /*   By: cproesch <cproesch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/22 15:24:39 by cproesch          #+#    #+#             */
-/*   Updated: 2021/10/30 14:05:09 by cproesch         ###   ########.fr       */
+/*   Updated: 2021/11/02 12:10:56 by cproesch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	child0_process(t_data *data, char **argv, char **envp)
 	close(data->pipefd[0][0]);
 	data->input = open_read(argv[1]);
 	if (data->input == -1)
-		exit(2);
+		ft_exit(&data, 2);
 	dup2(data->input, STDIN_FILENO);
 	close(data->input);
 	dup2(data->pipefd[0][1], STDOUT_FILENO);

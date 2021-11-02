@@ -6,7 +6,7 @@
 /*   By: cproesch <cproesch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 20:12:26 by cproesch          #+#    #+#             */
-/*   Updated: 2021/10/30 14:05:15 by cproesch         ###   ########.fr       */
+/*   Updated: 2021/11/02 12:10:47 by cproesch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	exec_command(t_data *data, char **envp, char *cmd, int x)
 	(data->cmd)[x] = parse_cmd(cmd);
 	(data->cmd_path)[x] = find_path(envp, (data->cmd)[x][0]);
 	if (!(data->cmd)[x] || !((data->cmd_path)[x]))
-		exit(2);
+		ft_exit(&data, 2);
 	if (execve((data->cmd_path)[x], (data->cmd)[x], envp) == -1)
 		perror("error - First exceve failed");
 }
