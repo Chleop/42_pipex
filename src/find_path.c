@@ -72,8 +72,13 @@ char	*find_path(char **envp, char *cmd)
 		return (NULL);
 	path = ft_strdup(find_accessible_path(tab_path_env));
 	ft_del_stringtab(tab_path_env);
+	free(str_path_env);
 	if (!path)
+	{
+		printf("ICI\n");
 		perror("cmd path error");
+		return (NULL);
+	}
 	if (access(cmd, 1) == 0)
 		return (cmd);
 	return (path);
